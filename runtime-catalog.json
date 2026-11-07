@@ -5,8 +5,8 @@
       "id": "php",
       "version": "8.5.12-1",
       "filename": "php-8.5.12-1-arm64.zip",
-      "sha256": "f123b845e13523c9b9426e36cb73e7e19644cc46569daf2c3332e1a226b43dbe",
-      "sizeBytes": 99852690,
+      "sha256": "d7e599011e08cc6bc566083c6a12df69d719aaf14a92112ac1f4131fd1328f37",
+      "sizeBytes": 99852187,
       "description": "PHP CLI and PHP-FPM from Termux (8.5.12-1)",
       "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/php-8.5.12-1-arm64.zip"
     },
@@ -14,8 +14,8 @@
       "id": "nginx",
       "version": "1.31.8",
       "filename": "nginx-1.31.8-arm64.zip",
-      "sha256": "81226240939d4c841eafc6b2e8ce0426a4b7a62fcc193c6e61d1a40552b1e831",
-      "sizeBytes": 8576036,
+      "sha256": "882dce5c7d30852b68cc70e0017409d482ef9c5f078e206299c4c5abc35e727f",
+      "sizeBytes": 8575838,
       "description": "Nginx web server from Termux (1.31.8)",
       "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/nginx-1.31.8-arm64.zip"
     },
@@ -23,8 +23,8 @@
       "id": "mariadb",
       "version": "13.0.2",
       "filename": "mariadb-13.0.2-arm64.zip",
-      "sha256": "d5a2ee23610c8ef109ad37104b1456a5da7450e861abbf060e2ef5889d4f03bc",
-      "sizeBytes": 90286016,
+      "sha256": "a4246cd54d0a695853bf9f91c3f30674b389a4a272832ee5f83abdff2c5bca04",
+      "sizeBytes": 90285433,
       "description": "MariaDB server and clients from Termux (13.0.2)",
       "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/mariadb-13.0.2-arm64.zip"
     },
@@ -32,8 +32,8 @@
       "id": "apache",
       "version": "2.4.70",
       "filename": "apache-2.4.70-arm64.zip",
-      "sha256": "e2e32cf9f677d0fc949008f9c55f1b5bb7b16fe32f3afa69b0e909fcf21f6fbd",
-      "sizeBytes": 19456985,
+      "sha256": "fb16442e040a293e51f9e4e61c6c5c83844bf8d5b27e82309528d27f5beb60e2",
+      "sizeBytes": 19454561,
       "description": "Apache HTTP Server from Termux (2.4.70)",
       "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/apache-2.4.70-arm64.zip"
     }
