@@ -5,6 +5,7 @@ import android.os.Build
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.pocketserver.app.di.AppContainer
+import dev.pocketserver.app.provision.RuntimeProvisionState
 import dev.pocketserver.core.model.InstalledRuntime
 import dev.pocketserver.database.DatabaseEngine
 import dev.pocketserver.database.DatabaseReadiness
@@ -14,6 +15,7 @@ import dev.pocketserver.ui.RuntimeUiState
 import dev.pocketserver.ui.TerminalLine
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -63,10 +65,25 @@ class ToolingViewModel(private val container: AppContainer) : ViewModel() {
     private val _databaseBusy = MutableStateFlow<DatabaseEngine?>(null)
     val databaseBusy: StateFlow<DatabaseEngine?> = _databaseBusy.asStateFlow()
 
+    val provisioning: StateFlow<RuntimeProvisionState> = container.runtimeProvisioner.state
+
     init {
         refreshRuntimes()
         refreshLogs()
         checkDatabases()
+        viewModelScope.launch {
+            container.runtimeProvisioner.state.collect { state ->
+                if (!state.running && state.total > 0) {
+                    _runtimes.value = runCatching { container.runtimeInstaller.listInstalled() }
+                        .getOrDefault(emptyList())
+                    refreshDatabaseInternal()
+                }
+            }
+        }
+    }
+
+    fun checkForBundles() {
+        container.runtimeProvisioner.requestProvision(viewModelScope)
     }
 
     fun refreshRuntimes() {

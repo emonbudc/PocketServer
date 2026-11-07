@@ -23,6 +23,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -61,6 +62,11 @@ fun RuntimeScreen(
     probeError: String?,
     busy: Boolean,
     message: String?,
+    autoRunning: Boolean,
+    autoMessage: String?,
+    autoError: Boolean,
+    autoProgress: Float?,
+    onCheckBundles: () -> Unit,
     onImport: (Uri, String?, Boolean) -> Unit,
     onRunProbe: () -> Unit,
     onUninstall: (String) -> Unit,
@@ -118,6 +124,52 @@ fun RuntimeScreen(
                     Text(
                         text = "Bundles must contain manifest.json and AArch64 ELF entrypoints. " +
                             "Archives are rejected for traversal paths, symlinks and non-ARM64 executables.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+            }
+        }
+        item {
+            PocketCard {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        SectionHeader(
+                            title = "Automatic runtime bundles",
+                            subtitle = "Downloaded and SHA-256 verified after installation.",
+                            modifier = Modifier.weight(1f),
+                        )
+                        TextButton(
+                            onClick = onCheckBundles,
+                            enabled = !autoRunning && !busy,
+                        ) {
+                            Text(if (autoRunning) "Downloading…" else "Check now")
+                        }
+                    }
+                    if (autoRunning) {
+                        if (autoProgress != null) {
+                            LinearProgressIndicator(
+                                progress = { autoProgress },
+                                modifier = Modifier.fillMaxWidth(),
+                            )
+                        } else {
+                            LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                        }
+                    }
+                    if (autoMessage != null) {
+                        Text(
+                            text = autoMessage,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = if (autoError) {
+                                MaterialTheme.colorScheme.error
+                            } else {
+                                MaterialTheme.colorScheme.onSurfaceVariant
+                            },
+                        )
+                    }
+                    Text(
+                        text = "The catalog is fetched over HTTPS. Every archive must match its " +
+                            "published SHA-256 before extraction.",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )

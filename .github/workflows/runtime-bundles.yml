@@ -1,0 +1,71 @@
+name: Runtime bundles
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Release tag that will host the bundle archives
+        required: true
+        default: runtime-bundles-v1
+      publish:
+        description: Publish or update the GitHub release
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: runtime-bundles
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Termux runtime bundles
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify deb tooling
+        run: dpkg-deb --version
+
+      - name: Build bundles and catalog
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python3 scripts/build_runtime_bundles.py \
+            --out dist/runtime-bundles \
+            --release-tag "${{ inputs.release_tag }}"
+
+      - name: Show catalog
+        run: cat dist/runtime-bundles/runtime-catalog.json
+
+      - name: Upload bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: runtime-bundles
+          path: dist/runtime-bundles/
+          if-no-files-found: error
+
+      - name: Publish release assets
+        if: ${{ inputs.publish }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release_tag }}
+        run: |
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" \
+              --title "PocketServer runtime bundles" \
+              --notes "Termux-based arm64-v8a runtime bundles for PocketServer. Assets are verified by SHA-256 in runtime-catalog.json."
+          fi
+          gh release upload "$TAG" \
+            dist/runtime-bundles/*.zip \
+            dist/runtime-bundles/runtime-catalog.json \
+            dist/runtime-bundles/runtime-bundles.sha256 \
+            --clobber

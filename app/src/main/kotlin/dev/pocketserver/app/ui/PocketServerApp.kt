@@ -136,6 +136,7 @@ fun PocketServerApp(
     val terminalRunning by toolingViewModel.terminalRunning.collectAsStateWithLifecycle()
     val databaseReadiness by toolingViewModel.databaseReadiness.collectAsStateWithLifecycle()
     val databaseBusy by toolingViewModel.databaseBusy.collectAsStateWithLifecycle()
+    val provisioning by toolingViewModel.provisioning.collectAsStateWithLifecycle()
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -367,6 +368,15 @@ fun PocketServerApp(
                         probeError = probe.probeError,
                         busy = toolingBusy,
                         message = toolingMessage,
+                        autoRunning = provisioning.running,
+                        autoMessage = provisioning.error ?: provisioning.message,
+                        autoError = provisioning.error != null,
+                        autoProgress = if (provisioning.total > 0) {
+                            provisioning.completed.toFloat() / provisioning.total
+                        } else {
+                            null
+                        },
+                        onCheckBundles = toolingViewModel::checkForBundles,
                         onImport = toolingViewModel::importRuntime,
                         onRunProbe = toolingViewModel::runNativeProbe,
                         onUninstall = toolingViewModel::uninstallRuntime,

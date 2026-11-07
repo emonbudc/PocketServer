@@ -4,9 +4,11 @@ import android.content.Context
 import android.os.Build
 import dev.pocketserver.app.BuildConfig
 import dev.pocketserver.app.NativeProbe
+import dev.pocketserver.app.provision.RuntimeProvisioner
 import dev.pocketserver.app.RuntimeCommandRegistry
 import dev.pocketserver.app.service.ServerController
 import dev.pocketserver.database.DatabaseReadinessService
+import dev.pocketserver.runtime.RuntimeCatalogClient
 import dev.pocketserver.runtime.RuntimeDirectories
 import dev.pocketserver.runtime.RuntimeInstaller
 import dev.pocketserver.services.ServiceDefinitionFactory
@@ -52,6 +54,14 @@ class AppContainer(val context: Context) {
     )
 
     val serviceManager = ServiceManager(definitionsProvider = { definitionFactory.create() })
+    val runtimeProvisioner = RuntimeProvisioner(
+        catalogUrl = BuildConfig.RUNTIME_CATALOG_URL,
+        installer = runtimeInstaller,
+        client = RuntimeCatalogClient(),
+        tempDir = paths.temp,
+        logger = logger,
+        onRuntimesChanged = { serviceManager.refresh() },
+    )
     val databaseReadiness = DatabaseReadinessService(runtimeInstaller, paths.config, paths.data)
     val commandRegistry = RuntimeCommandRegistry(runtimeInstaller)
     val terminal = TerminalSession(
@@ -77,5 +87,6 @@ class AppContainer(val context: Context) {
             )
         }
         serviceManager.refresh()
+        runtimeProvisioner.startAuto(appScope)
     }
 }

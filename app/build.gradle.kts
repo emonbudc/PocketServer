@@ -27,6 +27,15 @@ android {
         }
         buildConfigField("String", "SUPPORTED_ABI", "\"arm64-v8a\"")
         buildConfigField("int", "POCKET_TARGET_SDK", "28")
+        val catalogUrl = System.getenv("POCKETSERVER_CATALOG_URL")
+            ?.trim()
+            ?.ifBlank { null }
+            ?: "https://raw.githubusercontent.com/emonbudc/PocketServer/main/runtime-catalog.json"
+        buildConfigField(
+            "String",
+            "RUNTIME_CATALOG_URL",
+            "\"${catalogUrl.replace("\\", "\\\\").replace("\"", "\\\"")}\"",
+        )
     }
 
     signingConfigs {
