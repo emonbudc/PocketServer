@@ -50,6 +50,17 @@ jobs:
       - name: Assemble debug APK
         run: ./gradlew --no-daemon --stacktrace assembleDebug
 
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/build/reports/tests/**
+            **/build/test-results/**
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Checksums
         run: sha256sum app/build/outputs/apk/debug/*.apk | tee app-debug-sha256.txt
 
