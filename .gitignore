@@ -14,3 +14,8 @@ captures/
 !gradle/wrapper/gradle-wrapper.jar
 local.properties
 keystore.properties
+
+__pycache__/
+*.pyc
+.cache/
+dist/
