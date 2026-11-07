@@ -17,8 +17,8 @@ android {
         applicationId = "dev.pocketserver"
         minSdk = 26
         targetSdk = 28
-        versionCode = 1
-        versionName = "0.1.0-phase1"
+        versionCode = 1000001
+        versionName = "1.0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

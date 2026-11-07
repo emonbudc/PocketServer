@@ -9,8 +9,31 @@ permissions:
   contents: read
 
 jobs:
+  preflight:
+    name: Check signing secrets
+    runs-on: ubuntu-latest
+    outputs:
+      signed: ${{ steps.check.outputs.signed }}
+    steps:
+      - name: Check secrets
+        id: check
+        env:
+          KEYSTORE_BASE64: ${{ secrets.POCKETSERVER_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.POCKETSERVER_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.POCKETSERVER_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.POCKETSERVER_KEY_PASSWORD }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ] && [ -n "$KEYSTORE_PASSWORD" ] && [ -n "$KEY_ALIAS" ] && [ -n "$KEY_PASSWORD" ]; then
+            echo "signed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "signed=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Release signing secrets are not configured; signed release job skipped."
+          fi
+
   release:
     name: Build signed release APK
+    needs: preflight
+    if: needs.preflight.outputs.signed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
