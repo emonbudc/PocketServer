@@ -111,7 +111,10 @@ class ServiceManagerTest {
             executable = shell,
             arguments = listOf("-c", "sleep 30"),
             workingDirectory = root,
-            environment = mapOf("HOME" to root.absolutePath),
+            environment = mapOf(
+                "HOME" to root.absolutePath,
+                "PATH" to "/usr/bin:/bin:/usr/local/bin",
+            ),
             logFile = File(root, "${kind.id}.log"),
         ),
         healthCheck = HealthCheck.Tcp(port = 18080),

@@ -145,8 +145,9 @@ private fun ServiceDetailCard(
                 LabeledValue("Health", snapshot.healthDetail ?: "—")
             }
 
-            if (snapshot.error != null) {
-                MonoBlock(text = snapshot.error, error = true)
+            val errorText = snapshot.error
+            if (errorText != null) {
+                MonoBlock(text = errorText, error = true)
             } else if (reason != null) {
                 MonoBlock(text = reason)
             }
