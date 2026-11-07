@@ -12,6 +12,7 @@ Implemented:
 - Foreground service that starts/stops service groups, shows a low-priority notification and persists the desired running state.
 - Ordered service startup with PHP-FPM, Apache, Nginx, MariaDB and MySQL definitions.
 - Real readiness gating: `RUNNING` is shown only after process spawn and a TCP/HTTP health probe.
+- Automatic first-launch runtime provisioning from an HTTPS catalog. Bundles are downloaded, SHA-256 verified, and installed without user interaction.
 - SHA-256-verified runtime bundle import with zip-slip, size and AArch64 ELF validation. ZIP symlink entries are extracted as regular files and never followed.
 - Native probe compiled with the Android NDK, executed from app-private storage, proving unprivileged ARM64 `execve`.
 - Project and file management under `htdocs`, including SAF import/export and a path-guarded text editor.
@@ -21,7 +22,7 @@ Implemented:
 
 Not included yet:
 
-- No runtime binaries are downloaded or bundled. PHP/Apache/Nginx/MariaDB/MySQL remain unavailable until you import verified ARM64 bundles and provide configuration files.
+- Runtime bundles are not embedded in the APK. The default catalog points at the repository release `runtime-bundles-v1`, built from the official Termux ARM64 packages. PHP, Nginx, MariaDB and Apache still require matching config files.
 - Database initialization/bootstrap and SQL console are not implemented.
 - No Play Store distribution. `targetSdk` is intentionally 28 to permit `execve` from app-private storage.
 - The app does not modify runtime configuration files automatically.
@@ -67,6 +68,16 @@ A runtime bundle is a ZIP containing `manifest.json` at the archive root. Exampl
 
 Supported IDs currently include `php`, `apache`, `nginx`, `mariadb`, `mysql`, `node`, `python` and `git`. See `docs/RUNTIME_COMPATIBILITY.md` for the full contract.
 
+### Automatic provisioning
+
+On launch, PocketServer fetches `runtime-catalog.json` over HTTPS and installs any catalog bundle whose version is not already present. Each download is written to a temporary file, checked against the catalog SHA-256, then handed to `RuntimeInstaller`.
+
+Default catalog: `https://raw.githubusercontent.com/emonbudc/PocketServer/main/runtime-catalog.json`
+
+Published bundles: https://github.com/emonbudc/PocketServer/releases/tag/runtime-bundles-v1
+
+The catalog entries point at real release assets built from the Termux ARM64 package repository. Rebuild and republish with the **Runtime bundles** workflow; the workflow verifies every `.deb` against the Termux package index before packaging. Override the catalog URL at build time with `POCKETSERVER_CATALOG_URL`.
+
 ## Security model
 
 - Runtime archive paths are validated before extraction; absolute paths, traversal and oversized archives are rejected; ZIP symlink entries are never followed or recreated.
@@ -81,6 +92,6 @@ See `docs/SECURITY.md` for limitations and the threat model.
 ## Documentation
 
 - `docs/ARCHITECTURE.md` — modules, data flow and lifecycle.
-- `docs/RUNTIME_COMPATIBILITY.md` — ABI, manifest, ELF and configuration requirements.
+- `docs/RUNTIME_COMPATIBILITY.md` — ABI, manifest, ELF, catalog and configuration requirements.
 - `docs/TESTING.md` — local and CI verification.
 - `docs/SECURITY.md` — trust boundaries and known risks.

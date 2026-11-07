@@ -78,6 +78,29 @@ Defaults:
 
 The app prevents assigning the same port to two services. Loopback is the default; enabling LAN access in PocketServer does not edit runtime configs, so each server must be configured to bind `0.0.0.0` separately.
 
+## Automatic catalog
+
+`runtime-catalog.json` is fetched over HTTPS on launch:
+
+```json
+{
+  "formatVersion": 1,
+  "bundles": [
+    {
+      "id": "php",
+      "version": "8.5.12-1",
+      "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/php-8.5.12-1-arm64.zip",
+      "sha256": "f123b845e13523c9b9426e36cb73e7e19644cc46569daf2c3332e1a226b43dbe",
+      "sizeBytes": 99852690
+    }
+  ]
+}
+```
+
+The client rejects non-HTTPS URLs, credential-bearing URLs, duplicate IDs, malformed digests and archives larger than 2 GiB. Installed versions are skipped; newer catalog versions install alongside the old version and become active.
+
+The release assets under `runtime-bundles-v1` are assembled from official Termux `aarch64` packages. Package SHA-256 values come from the Termux package index. Assets are rebuilt only by `.github/workflows/runtime-bundles.yml`.
+
 ## Verification
 
 Import a bundle with a mandatory SHA-256 checksum. The Runtime screen displays the computed digest and verification status. Use the native probe first to confirm that the device executes AArch64 binaries from app-private storage.

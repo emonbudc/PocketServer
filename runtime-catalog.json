@@ -1,4 +1,41 @@
 {
   "formatVersion": 1,
-  "bundles": []
+  "bundles": [
+    {
+      "id": "php",
+      "version": "8.5.12-1",
+      "filename": "php-8.5.12-1-arm64.zip",
+      "sha256": "f123b845e13523c9b9426e36cb73e7e19644cc46569daf2c3332e1a226b43dbe",
+      "sizeBytes": 99852690,
+      "description": "PHP CLI and PHP-FPM from Termux (8.5.12-1)",
+      "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/php-8.5.12-1-arm64.zip"
+    },
+    {
+      "id": "nginx",
+      "version": "1.31.8",
+      "filename": "nginx-1.31.8-arm64.zip",
+      "sha256": "81226240939d4c841eafc6b2e8ce0426a4b7a62fcc193c6e61d1a40552b1e831",
+      "sizeBytes": 8576036,
+      "description": "Nginx web server from Termux (1.31.8)",
+      "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/nginx-1.31.8-arm64.zip"
+    },
+    {
+      "id": "mariadb",
+      "version": "13.0.2",
+      "filename": "mariadb-13.0.2-arm64.zip",
+      "sha256": "d5a2ee23610c8ef109ad37104b1456a5da7450e861abbf060e2ef5889d4f03bc",
+      "sizeBytes": 90286016,
+      "description": "MariaDB server and clients from Termux (13.0.2)",
+      "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/mariadb-13.0.2-arm64.zip"
+    },
+    {
+      "id": "apache",
+      "version": "2.4.70",
+      "filename": "apache-2.4.70-arm64.zip",
+      "sha256": "e2e32cf9f677d0fc949008f9c55f1b5bb7b16fe32f3afa69b0e909fcf21f6fbd",
+      "sizeBytes": 19456985,
+      "description": "Apache HTTP Server from Termux (2.4.70)",
+      "url": "https://github.com/emonbudc/PocketServer/releases/download/runtime-bundles-v1/apache-2.4.70-arm64.zip"
+    }
+  ]
 }
