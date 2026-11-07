@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">PocketServer</string>
+    <string name="notification_channel_name">Server runtime</string>
+    <string name="notification_channel_description">Keeps PocketServer services alive while running.</string>
+    <string name="notification_title">PocketServer</string>
+    <string name="notification_idle">No services running</string>
+    <string name="notification_running">Services running</string>
+</resources>

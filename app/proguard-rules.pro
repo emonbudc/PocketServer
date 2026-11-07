@@ -1,0 +1,3 @@
+-keepattributes *Annotation*
+-keep class dev.pocketserver.** { *; }
+-dontwarn org.jetbrains.annotations.**
