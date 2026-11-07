@@ -1,5 +1,6 @@
 package dev.pocketserver.process
 
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.nio.file.Files
@@ -17,7 +18,7 @@ class ManagedProcessTest {
     fun runsAndCapturesOutput() = runBlocking {
         val process = ManagedProcess(spec("echo"))
         process.start()
-        val snapshot = process.stop(5_000)
+        val snapshot = awaitTerminal(process)
         assertEquals(ProcessState.STOPPED, snapshot.state)
         assertTrue(logFile.readText().contains("pocketserver-output"))
         process.close()
@@ -27,7 +28,7 @@ class ManagedProcessTest {
     fun capturesStderrAndNonZeroExit() = runBlocking {
         val process = ManagedProcess(spec("fail", "-c", "echo oops >&2; exit 7"))
         process.start()
-        val snapshot = process.stop(5_000)
+        val snapshot = awaitTerminal(process)
         assertEquals(ProcessState.FAILED, snapshot.state)
         assertEquals(7, snapshot.exitCode)
         assertTrue(logFile.readText().contains("oops"))
@@ -36,9 +37,11 @@ class ManagedProcessTest {
 
     @Test
     fun stopsLongRunningProcess() = runBlocking {
-        val process = ManagedProcess(spec("sleep", "-c", "exec sleep 30"))
+        val process = ManagedProcess(
+            spec("sleep", "-c", "sleep 30", environment = mapOf("PATH" to "/usr/bin:/bin:/usr/local/bin")),
+        )
         process.start()
-        val snapshot = process.stop(1_000)
+        val snapshot = process.stop(2_000)
         assertEquals(ProcessState.STOPPED, snapshot.state)
         assertTrue(process.state.value == ProcessState.STOPPED)
         process.close()
@@ -51,7 +54,23 @@ class ManagedProcessTest {
         }
     }
 
-    private fun spec(commandName: String, vararg args: String): ProcessSpec = ProcessSpec(
+    private suspend fun awaitTerminal(process: ManagedProcess, timeoutMs: Long = 5_000): ProcessSnapshot {
+        val deadline = System.currentTimeMillis() + timeoutMs
+        while (System.currentTimeMillis() < deadline) {
+            val current = process.snapshot.value
+            if (current.state == ProcessState.STOPPED || current.state == ProcessState.FAILED) {
+                return current
+            }
+            delay(20)
+        }
+        return process.snapshot.value
+    }
+
+    private fun spec(
+        commandName: String,
+        vararg args: String,
+        environment: Map<String, String> = emptyMap(),
+    ): ProcessSpec = ProcessSpec(
         id = "test-$commandName",
         executable = shell,
         arguments = if (commandName == "echo") {
@@ -62,6 +81,7 @@ class ManagedProcessTest {
             listOf("-c", "printf done")
         },
         workingDirectory = workDir,
+        environment = environment,
         logFile = logFile,
     )
 }
