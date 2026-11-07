@@ -65,13 +65,14 @@ class ManagedProcess(
             }
             process = started
             transition(ProcessState.RUNNING, pid = started.pid(), startedAt = _snapshot.value.startedAtEpochMs)
-            pumpJob = scope.launch { pumpOutput(started) }
+            val pump = scope.launch { pumpOutput(started) }
+            pumpJob = pump
             scope.launch {
                 val exit = runCatching {
                     started.waitFor()
                     started.exitValue()
                 }.getOrNull()
-                pumpJob?.join()
+                pump.join()
                 onExit(exit)
             }
         }

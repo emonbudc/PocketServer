@@ -145,7 +145,7 @@ class RuntimeInstaller(
     }
 
     fun uninstall(id: String): Boolean {
-        val dir = PathGuard.resolveWithin(directories.packages, id)
+        val dir = runCatching { PathGuard.resolveWithin(directories.packages, id) }.getOrNull() ?: return false
         if (dir == directories.packages || !dir.exists()) return false
         if (!PathGuard.isInside(directories.packages, dir)) return false
         return dir.deleteRecursively()

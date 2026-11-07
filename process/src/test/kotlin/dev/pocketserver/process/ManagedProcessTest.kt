@@ -36,7 +36,7 @@ class ManagedProcessTest {
 
     @Test
     fun stopsLongRunningProcess() = runBlocking {
-        val process = ManagedProcess(spec("sleep", "-c", "sleep 30"))
+        val process = ManagedProcess(spec("sleep", "-c", "exec sleep 30"))
         process.start()
         val snapshot = process.stop(1_000)
         assertEquals(ProcessState.STOPPED, snapshot.state)
