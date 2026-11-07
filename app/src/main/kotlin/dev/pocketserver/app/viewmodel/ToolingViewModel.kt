@@ -185,7 +185,7 @@ class ToolingViewModel(private val container: AppContainer) : ViewModel() {
 
     fun deleteLog(file: LogFileInfo) {
         viewModelScope.launch(Dispatchers.IO) {
-            runCatching { container.logs.delete(file) }
+            runCatching { container.logs.delete(file.file) }
                 .onFailure { _message.value = "Unable to delete log: ${it.message}" }
             if (_selectedLog.value?.file == file.file) {
                 _selectedLog.value = null
