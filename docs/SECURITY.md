@@ -10,7 +10,7 @@
 ## Controls
 
 - `PathGuard` canonicalizes paths and verifies containment for projects, logs, config and runtime extraction.
-- `RuntimeInstaller` rejects absolute paths, traversal, symlinks, oversized archives, invalid manifests and non-AArch64 ELF entrypoints before activation.
+- `RuntimeInstaller` rejects absolute paths, traversal, oversized archives, invalid manifests and non-AArch64 ELF entrypoints before activation. ZIP symlink entries are extracted as ordinary files; no symbolic links are created or followed.
 - SHA-256 verification is available and can be required at import.
 - `targetSdk 28` permits `execve` from app-private storage. This is deliberate and incompatible with Play Store policy expectations.
 - Database passwords are random, AES-GCM encrypted and held in the Android Keystore. They are not written to preferences, config files or logs.

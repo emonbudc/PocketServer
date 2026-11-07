@@ -8,8 +8,8 @@ data class ElfInfo(
     val type: Int,
     val machine: Int,
 ) {
-    val isAarch64: Boolean get() = is64Bit && isLittleEndian && machine == EM_AARCH64
-    val isExecutable: Boolean get() = type == ET_EXEC || type == ET_DYN
+    val isAarch64: Boolean get() = is64Bit && isLittleEndian && machine == ElfInspector.EM_AARCH64
+    val isExecutable: Boolean get() = type == ElfInspector.ET_EXEC || type == ElfInspector.ET_DYN
     val isUsable: Boolean get() = isAarch64 && isExecutable
 
     fun describe(): String =

@@ -31,7 +31,7 @@ Validation rules enforced by `RuntimeInstaller`:
 - `abi` must be `arm64-v8a`.
 - Entrypoint paths must be safe relative paths and must exist after extraction.
 - Every entrypoint must be an ELF executable for AArch64 (`e_machine == 183`). PIC/PIE shared objects are not accepted as entrypoints.
-- Archives may not contain absolute paths, `..` traversal, symbolic links or more than 200,000 entries.
+- Archives may not contain absolute paths, `..` traversal or more than 200,000 entries. ZIP symlink entries are extracted as regular files and are never followed.
 - Uncompressed size is capped at 4 GiB.
 
 ## Expected runtime IDs and entrypoints

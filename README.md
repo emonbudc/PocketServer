@@ -12,7 +12,7 @@ Implemented:
 - Foreground service that starts/stops service groups, shows a low-priority notification and persists the desired running state.
 - Ordered service startup with PHP-FPM, Apache, Nginx, MariaDB and MySQL definitions.
 - Real readiness gating: `RUNNING` is shown only after process spawn and a TCP/HTTP health probe.
-- SHA-256-verified runtime bundle import with zip-slip, symlink, size and AArch64 ELF validation.
+- SHA-256-verified runtime bundle import with zip-slip, size and AArch64 ELF validation. ZIP symlink entries are extracted as regular files and never followed.
 - Native probe compiled with the Android NDK, executed from app-private storage, proving unprivileged ARM64 `execve`.
 - Project and file management under `htdocs`, including SAF import/export and a path-guarded text editor.
 - Built-in terminal commands and allowlisted runtime binaries with dynamic `PATH`/`LD_LIBRARY_PATH`.
@@ -69,7 +69,7 @@ Supported IDs currently include `php`, `apache`, `nginx`, `mariadb`, `mysql`, `n
 
 ## Security model
 
-- Runtime archive paths are validated before extraction; absolute paths, traversal, symlinks and oversized archives are rejected.
+- Runtime archive paths are validated before extraction; absolute paths, traversal and oversized archives are rejected; ZIP symlink entries are never followed or recreated.
 - SHA-256 verification can be enforced at import.
 - Filesystem operations are confined to the app sandbox and `htdocs`.
 - Database passwords are generated randomly and stored with AES-GCM using an Android Keystore key.

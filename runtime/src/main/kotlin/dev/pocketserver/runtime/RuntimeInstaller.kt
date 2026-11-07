@@ -206,10 +206,6 @@ class RuntimeInstaller(
             if (normalized.isEmpty() || !PathGuard.isValidRelativePath(normalized)) {
                 throw RuntimeInstallException("Unsafe archive entry: $name")
             }
-            val type = (entry.externalAttributes ushr 16) and 0xF000
-            if (type == 0xA000) {
-                throw RuntimeInstallException("Symbolic links are not allowed in runtime archives: $name")
-            }
             if (entry.size > 0) {
                 declaredBytes += entry.size
                 if (declaredBytes > maxUncompressedBytes) {

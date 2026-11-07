@@ -20,7 +20,7 @@ The NDK is required at build time because `compileNativeProbe` produces the `psp
 ## Unit test coverage
 
 - `:core`: path containment, port validation, SHA-256 helpers, token parsing, formatting.
-- `:runtime`: ZIP install, checksum mismatch, traversal/symlink rejection, ELF inspection.
+- `:runtime`: ZIP install, checksum mismatch, traversal rejection, ELF inspection.
 - `:process`: process spawn, output capture, stop behavior.
 - `:services`: dependency ordering, unavailable services, health gating, unexpected exit handling.
 - `:database`: readiness checks.
