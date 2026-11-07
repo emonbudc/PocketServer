@@ -227,6 +227,23 @@ def is_aarch64_elf(path):
     )
 
 
+def patch_rpaths(root):
+    for path in root.rglob("*"):
+        if not path.is_file() or not is_aarch64_elf(path):
+            continue
+        relative = os.path.relpath(root / "lib", path.parent)
+        rpath = "$ORIGIN" if relative == "." else f"$ORIGIN/{relative}"
+        lib64 = root / "lib64"
+        if lib64.is_dir():
+            relative64 = os.path.relpath(lib64, path.parent)
+            rpath += f":$ORIGIN/{relative64}"
+        subprocess.run(
+            ["patchelf", "--set-rpath", rpath, str(path)],
+            check=True,
+            stdout=subprocess.DEVNULL,
+        )
+
+
 def sanitize_version(value):
     if ":" in value:
         value = value.split(":", 1)[1]
@@ -266,6 +283,8 @@ def build_bundle(spec, packages, cache, output):
             if not prefix_root.is_dir():
                 raise BundleError(f"{name} does not contain the Termux prefix")
             merge_tree(prefix_root, root, prefix_root, visited)
+
+        patch_rpaths(root)
 
         entrypoints = {}
         for key, candidates in spec["entrypoints"].items():

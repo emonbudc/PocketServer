@@ -32,8 +32,12 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Verify deb tooling
-        run: dpkg-deb --version
+      - name: Install bundle tooling
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y patchelf
+          dpkg-deb --version
+          patchelf --version
 
       - name: Build bundles and catalog
         env:
