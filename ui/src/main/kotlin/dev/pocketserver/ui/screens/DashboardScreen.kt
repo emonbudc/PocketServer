@@ -274,7 +274,7 @@ fun DashboardScreen(
             PocketCard {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     if (runtimes.isEmpty()) {
-                        MonoBlock("No runtimes installed.\nImport a checksum-verified arm64-v8a bundle from Runtime Manager.")
+                        MonoBlock("No runtimes installed.\nAutomatic provisioning runs on launch; local import is also available in Runtime Manager.")
                     } else {
                         runtimes.forEach { runtime ->
                             Row(verticalAlignment = Alignment.CenterVertically) {

@@ -219,7 +219,7 @@ fun RuntimeScreen(
             item {
                 EmptyState(
                     title = "Runtime storage is empty",
-                    body = "Import a compatible bundle. PocketServer does not download binaries from unverified URLs.",
+                    body = "Automatic provisioning starts on launch. You can also import a local, checksum-verified ARM64 bundle.",
                 )
             }
         }

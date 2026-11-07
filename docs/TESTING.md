@@ -52,11 +52,12 @@ The workflow verifies the signature with `apksigner` before uploading.
 
 1. Install the debug APK on an ARM64 Android 8+ device.
 2. Open **Runtime manager** and run the native probe. Expect UID and kernel information plus `exec: app-private storage, no root`.
-3. Import a runtime bundle with its SHA-256 and confirm the installed runtime appears.
-4. Add service configuration files under the app's private config directory.
-5. Start one service and confirm it reaches `RUNNING` only when its health probe succeeds.
-6. Open `http://127.0.0.1:8080/` in the device browser after the web server and PHP-FPM are configured.
-7. Stop all services from the notification action and confirm the foreground notification disappears.
+3. Confirm the automatic catalog provisioner downloads the PHP, Nginx, MariaDB and Apache bundles, or import a local bundle with its SHA-256.
+4. Confirm each installed runtime appears with verification status and its catalog version.
+5. Add service configuration files under the app's private config directory.
+6. Start one service and confirm it reaches `RUNNING` only when its health probe succeeds.
+7. Open `http://127.0.0.1:8080/` in the device browser after the web server and PHP-FPM are configured.
+8. Stop all services from the notification action and confirm the foreground notification disappears.
 
 ## Limitations
 
